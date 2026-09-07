@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+
+
+<style>
+  :root{
+    --ink:      #f4efe6;
+    --ink-dim:  #cfc6d9;
+    --night-1:  #16112a;
+    --night-2:  #241a3d;
+    --night-3:  #2f2150;
+    --gold:     #e3b04b;
+    --gold-dim: #b98f3c;
+    --rose:     #e2a4a0;
+    --line:     rgba(244,239,230,0.14);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--night-1);
+    color: var(--ink);
+    font-family: 'Manrope', -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3, .display{
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  a{ color: inherit; }
+
+  /* ---------- background texture: soft stars ---------- */
+  .stars{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(244,239,230,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 70% 15%, rgba(244,239,230,0.4), transparent),
+      radial-gradient(1px 1px at 40% 70%, rgba(244,239,230,0.35), transparent),
+      radial-gradient(1.5px 1.5px at 90% 60%, rgba(244,239,230,0.4), transparent),
+      radial-gradient(1px 1px at 55% 45%, rgba(244,239,230,0.3), transparent),
+      radial-gradient(1.5px 1.5px at 10% 85%, rgba(244,239,230,0.4), transparent),
+      radial-gradient(1px 1px at 85% 90%, rgba(244,239,230,0.3), transparent);
+    background-repeat: repeat;
+    background-size: 600px 600px;
+    opacity: 0.6;
+  }
+
+  main{ position: relative; z-index: 1; }
+
+  section{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 120px 28px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background:
+      radial-gradient(ellipse 60% 45% at 30% 20%, rgba(227,176,75,0.10), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 80% 80%, rgba(226,164,160,0.08), transparent 60%);
+  }
+
+  .hero .eyebrow{
+    color: var(--gold);
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: rise 1s ease forwards 0.1s;
+  }
+
+  .hero h1{
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    line-height: 1.08;
+    margin: 0 0 22px;
+    max-width: 11ch;
+    opacity: 0;
+    animation: rise 1s ease forwards 0.35s;
+  }
+
+  .hero h1 em{
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero p{
+    font-size: 1.15rem;
+    color: var(--ink-dim);
+    max-width: 46ch;
+    opacity: 0;
+    animation: rise 1s ease forwards 0.6s;
+  }
+
+  .hero .scrolldown{
+    margin-top: 56px;
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: rise 1s ease forwards 0.9s;
+  }
+
+  .scrolldown .stem{
+    width: 1px;
+    height: 34px;
+    background: var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .scrolldown .stem::after{
+    content:"";
+    position:absolute;
+    top:-100%; left:0;
+    width:100%; height:100%;
+    background: var(--gold);
+    animation: drip 2.2s ease-in-out infinite;
+  }
+  @keyframes drip{
+    0%{ top:-100%; }
+    60%{ top:100%; }
+    100%{ top:100%; }
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* ---------- section headers ---------- */
+  .kicker{
+    color: var(--gold);
+    font-size: 0.95rem;
+    margin: 0 0 10px;
+  }
+
+  section h2{
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin: 0 0 36px;
+    max-width: 16ch;
+  }
+
+  /* ---------- the letter ---------- */
+  .letter{
+    border-top: 1px solid var(--line);
+  }
+
+  .letter p{
+    font-size: 1.08rem;
+    color: var(--ink-dim);
+    margin: 0 0 20px;
+    max-width: 62ch;
+  }
+
+  .letter p:first-of-type::first-letter{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.4rem;
+    color: var(--gold);
+    float: left;
+    line-height: 0.8;
+    padding-right: 10px;
+    padding-top: 6px;
+  }
+
+  .letter .signoff{
+    margin-top: 40px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--ink);
+  }
+
+  /* ---------- gallery ---------- */
+  .gallery{
+    border-top: 1px solid var(--line);
+  }
+
+  .frames{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .frame{
+    position: relative;
+    aspect-ratio: 4/5;
+    border-radius: 4px;
+    overflow: hidden;
+    background: linear-gradient(155deg, var(--night-3), var(--night-2));
+    border: 1px solid var(--line);
+  }
+
+  .frame:nth-child(3n+1){ aspect-ratio: 4/5; }
+  .frame:nth-child(3n+2){ aspect-ratio: 1/1; grid-row: span 1; }
+
+  .frame img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .frame-placeholder{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .frame-placeholder svg{ opacity: 0.5; width: 26px; height: 26px; }
+
+  .frame-caption{
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 14px 16px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: linear-gradient(to top, rgba(22,17,42,0.85), transparent);
+  }
+
+  /* ---------- promises (asymmetric, not numbered) ---------- */
+  .promises{
+    border-top: 1px solid var(--line);
+  }
+
+  .promise-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .promise{
+    background: var(--night-1);
+    padding: 30px 28px;
+  }
+
+  .promise h3{
+    font-size: 1.25rem;
+    margin: 0 0 8px;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .promise p{
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 1rem;
+    max-width: 52ch;
+  }
+
+  /* ---------- the honest part (avoidance / her past) ---------- */
+  .honest{
+    border-top: 1px solid var(--line);
+  }
+
+  .honest-box{
+    background: var(--night-2);
+    border-left: 2px solid var(--rose);
+    padding: 34px 30px;
+    border-radius: 2px;
+  }
+
+  .honest-box p{
+    color: var(--ink-dim);
+    margin: 0 0 18px;
+    font-size: 1.05rem;
+  }
+
+  .honest-box p:last-child{ margin-bottom: 0; }
+
+  .honest-box strong{
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ---------- closing ---------- */
+  .closing{
+    text-align: center;
+    border-top: 1px solid var(--line);
+    padding-bottom: 160px;
+  }
+
+  .closing .display{
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    margin: 0 0 20px;
+  }
+
+  .closing .display em{
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .closing p{
+    color: var(--ink-dim);
+    max-width: 44ch;
+    margin: 0 auto 44px;
+  }
+
+  .reveal-btn{
+    background: none;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    padding: 14px 30px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.95rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .reveal-btn:hover{
+    background: var(--gold);
+    color: var(--night-1);
+  }
+  .reveal-btn:focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
+
+  .reveal-msg{
+    margin-top: 30px;
+    max-width: 46ch;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--ink);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.6s ease, opacity 0.6s ease;
+  }
+  .reveal-msg.open{
+    max-height: 300px;
+    opacity: 1;
+  }
+
+  .signature{
+    margin-top: 60px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--ink-dim);
+  }
+
+  footer{
+    text-align: center;
+    padding: 30px;
+    font-size: 0.8rem;
+    color: var(--ink-dim);
+    opacity: 0.6;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (min-width: 640px){
+    .frames{ grid-template-columns: repeat(3, 1fr); }
+    .promise-grid{ grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" aria-hidden="true"></div>
+
+<main>
+
+    <section class="hero">
+    <div class="eyebrow">For my baby</div>
+    <h1>Wherever you go,<br>I'm <em>already there.</em></h1>
+    <p>Something I've been meaning to put into words for a while, not a quick text, the whole thing. Scroll down.</p>
+    <div class="scrolldown">
+      <div class="stem"></div>
+      keep going
+    </div>
+  </section>
+
+    <section class="letter">
+    <p class="kicker">A letter</p>
+    <h2>Everything I haven't said out loud</h2>
+
+    <p>I don't know if I say this enough, so I wanted to write it down where it can't get lost in a busy day or a rushed goodnight text: I love you. Not the easy, convenient kind of love, the kind that's still choosing you on the hard days, the quiet days, the days you pull away without meaning to.</p>
+
+    <p>I've seen your past come up in the middle of an ordinary afternoon and change the whole shape of it. I've seen you brace for the moment I leave, even when I'm not going anywhere. I'm not writing this to fix that or to rush you out of it. I'm writing it so you have something to come back to when that voice gets loud: I'm not here despite who you are. I'm here because of who you are, all of it, the guarded parts included.</p>
+
+    <p>You don't have to perform okay-ness for me. You don't have to explain the silence or apologize for needing space. I'd rather have the real, sometimes-distant you than a version of you that's just managing my expectations. Whatever it takes, however long it takes, I'm not in a hurry, and I'm not going anywhere.</p>
+
+    <p class="signoff">Love, your boyfriend kai</p>
+  </section>
+
+    <section class="gallery">
+    <p class="kicker">Us</p>
+    <h2>A few of my favorites</h2>
+
+    <div class="frames">
+
+      <div class="frame">
+        <img src="photo1.jpg" alt="before me magkasakit">
+        <div class="frame-caption">you, right before we rode off</div>
+      </div>
+
+      <div class="frame">
+        <img src="photo2.jpg" alt="just us here samin">
+        <div class="frame-caption">us being extra, as usual</div>
+      </div>
+
+      <div class="frame">
+        <img src="photo3.jpg" alt="pinagod moko maglakad">
+        <div class="frame-caption">you on a random afternoon</div>
+      </div>
+
+      <div class="frame">
+        <img src="photo4.jpg" alt="staycationn">
+        <div class="frame-caption">us, caught in a random mirror</div>
+      </div>
+
+      <div class="frame">
+        <img src="photo5.jpg" alt="staycationn">
+        <div class="frame-caption">you laughing so hard you covered your face</div>
+      </div>
+
+      <div class="frame">
+        <img src="photo6.jpg" alt="first datee">
+        <div class="frame-caption">just us, holding on</div>
+      </div>
+
+    </div>
+  </section>
+
+    <section class="promises">
+    <p class="kicker">What I need you to know</p>
+    <h2>Not promises I'll break when it's inconvenient</h2>
+
+    <div class="promise-grid">
+      <div class="promise">
+        <h3>I'm not keeping score</h3>
+        <p>Not of who texted first, who apologized first, who needs the other more. I'm not here to win, I'm here to stay.</p>
+      </div>
+      <div class="promise">
+        <h3>Your past doesn't scare me off</h3>
+        <p>It explains you, it doesn't disqualify you. I'd rather understand it than run from it.</p>
+      </div>
+      <div class="promise">
+        <h3>I'll meet you halfway, every time</h3>
+        <p>If pulling back is how you protect yourself, I'm not going to punish you for it. I'll just still be here when you're ready to come back.</p>
+      </div>
+      <div class="promise">
+        <h3>You can be difficult and still be loved</h3>
+        <p>You don't have to be easy to be worth staying for. I'm not looking for easy.</p>
+      </div>
+      <div class="promise">
+        <h3>I'll say it in the boring moments too</h3>
+        <p>Not just the big romantic ones. Grocery runs, bad days, silence in the car, I love you there too.</p>
+      </div>
+      <div class="promise">
+        <h3>This isn't conditional</h3>
+        <p>Not on your mood, your walls being down, or you having it all figured out. None of that is the price of my staying.</p>
+      </div>
+    </div>
+  </section>
+
+    <section class="honest">
+    <p class="kicker">The part I really want you to read</p>
+    <h2>Even when you pull away</h2>
+
+    <div class="honest-box">
+      <p>I know sometimes distance feels safer to you than closeness does. I know that instinct probably kept you safe once, so I'm not going to make you feel guilty for having it.</p>
+      <p>Here's what I want you to actually believe, not just hear: <strong>your avoidance doesn't move me.</strong> It doesn't make me love you less, and it doesn't make me leave. When you go quiet, I'm not disappearing on my end, I'm just waiting, without an agenda, for whenever you're ready.</p>
+      <p>You don't owe me constant closeness to be worth loving. You just have to be you, on whatever day that looks like.</p>
+    </div>
+  </section>
+
+    <section class="closing">
+    <h2 class="display">I love you<br><em>so much.</em></h2>
+    <p>This isn't the whole thing, there's more I'll tell you in person, over time, on ordinary days. But this is a start.</p>
+
+    <button class="reveal-btn" id="revealBtn">one more thing</button>
+    <p class="reveal-msg" id="revealMsg">Whatever it takes, however long it takes, I'm not going anywhere. That's not a line, it's a decision I've already made.</p>
+
+    <p class="signature">Always, your boyfriend kai</p>
+  </section>
+
+</main>
+
+
+<script>
+  const btn = document.getElementById('revealBtn');
+  const msg = document.getElementById('revealMsg');
+  btn.addEventListener('click', () => {
+    msg.classList.toggle('open');
+    btn.textContent = msg.classList.contains('open') ? 'close' : 'one more thing';
+  });
+</script>
+
+</body>
+</html>
